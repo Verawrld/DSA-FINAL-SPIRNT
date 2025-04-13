@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -16,29 +17,33 @@ public class TreeService {
     private TreeRepository treeRepository;
 
     /**
-     * Creates a binary search tree from a comma-separated string of numbers,
+     * Creates a balanced binary search tree from a comma-separated string of
+     * numbers,
      * serializes it to JSON, and saves it to the repository.
      *
      * @param numbers Comma-separated string of numbers.
      * @return Pretty-printed JSON representation of the binary search tree.
      */
     public String createTree(String numbers) {
+        // Parse and sort the input numbers
         String[] numArray = numbers.split(",");
-        TreeNode root = null;
+        int[] sortedNumbers = Arrays.stream(numArray)
+                .mapToInt(num -> Integer.parseInt(num.trim()))
+                .sorted()
+                .toArray();
 
-        // Insert each number into the binary search tree
-        for (String num : numArray) {
-            root = insert(root, Integer.parseInt(num.trim()));
-        }
+        // Build a balanced binary search tree
+        TreeNode root = buildBalancedTree(sortedNumbers, 0, sortedNumbers.length - 1);
 
         // Serialize the tree to JSON
         String treeJson = serializeTreeWithRoot(root);
 
-        // Save the original input and serialized tree to the repository
-        treeRepository.save(numbers, treeJson);
+        // Pretty-print the JSON before saving it
+        String prettyTreeJson = prettyPrintJson(treeJson);
+        treeRepository.save(numbers, prettyTreeJson);
 
-        // Pretty-print the JSON
-        return prettyPrintJson(treeJson);
+        // Return the pretty-printed JSON
+        return prettyTreeJson;
     }
 
     /**
@@ -51,22 +56,27 @@ public class TreeService {
     }
 
     /**
-     * Inserts a value into the binary search tree.
+     * Builds a balanced binary search tree from a sorted array.
      *
-     * @param root  The root of the tree.
-     * @param value The value to insert.
-     * @return The updated root of the tree.
+     * @param sortedNumbers The sorted array of numbers.
+     * @param start         The start index of the array.
+     * @param end           The end index of the array.
+     * @return The root of the balanced binary search tree.
      */
-    private TreeNode insert(TreeNode root, int value) {
-        if (root == null) {
-            return new TreeNode(value);
+    private TreeNode buildBalancedTree(int[] sortedNumbers, int start, int end) {
+        if (start > end) {
+            return null;
         }
-        if (value < root.getValue()) {
-            root.setLeft(insert(root.getLeft(), value));
-        } else {
-            root.setRight(insert(root.getRight(), value));
-        }
-        return root;
+
+        // Find the middle element and make it the root
+        int mid = (start + end) / 2;
+        TreeNode node = new TreeNode(sortedNumbers[mid]);
+
+        // Recursively build the left and right subtrees
+        node.setLeft(buildBalancedTree(sortedNumbers, start, mid - 1));
+        node.setRight(buildBalancedTree(sortedNumbers, mid + 1, end));
+
+        return node;
     }
 
     /**

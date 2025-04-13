@@ -110,6 +110,53 @@ public class BinarySearchTreeApplicationTests {
         assertNull(root.getRight().getRight());
     }
 
+    // Test for TreeService: Verify Balanced Tree Creation
+    @Test
+    void testCreateBalancedTree() {
+        // Arrange
+        String numbers = "5,3,8,1,4,7,10";
+        String expectedJson = "{ " +
+                "\"root\": { " +
+                "\"value\": 5, " +
+                "\"left\": { " +
+                "\"value\": 3, " +
+                "\"left\": { " +
+                "\"value\": 1, " +
+                "\"left\": null, " +
+                "\"right\": null " +
+                "}, " +
+                "\"right\": { " +
+                "\"value\": 4, " +
+                "\"left\": null, " +
+                "\"right\": null " +
+                "} " +
+                "}, " +
+                "\"right\": { " +
+                "\"value\": 8, " +
+                "\"left\": { " +
+                "\"value\": 7, " +
+                "\"left\": null, " +
+                "\"right\": null " +
+                "}, " +
+                "\"right\": { " +
+                "\"value\": 10, " +
+                "\"left\": null, " +
+                "\"right\": null " +
+                "} " +
+                "} " +
+                "} " +
+                "}";
+
+        when(treeService.createTree(numbers)).thenReturn(expectedJson);
+
+        // Act
+        String resultJson = treeService.createTree(numbers);
+
+        // Assert
+        assertNotNull(resultJson);
+        assertEquals(expectedJson.trim(), resultJson.trim());
+    }
+
     @Test
     void contextLoads() {
         // Default Spring Boot test to ensure the application context loads successfully

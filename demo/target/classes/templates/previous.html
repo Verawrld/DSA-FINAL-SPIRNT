@@ -4,15 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Previous Trees</title>
+    <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <h1>Previously Processed Trees</h1>
-    <ul>
-      <!-- Loop through the list of trees -->
-      <li th:each="tree : ${trees}">
-        <pre th:text="${tree}"></pre>
-      </li>
-    </ul>
-    <a href="/enter-numbers">Go Back</a>
+    <div class="navbar">
+      <span>Binary Search Tree App</span>
+      <div>
+        <a href="/enter-numbers">Home</a>
+        <a href="/previous-trees">Previous Trees</a>
+      </div>
+    </div>
+    <div class="container">
+      <h1>Previously Processed Trees</h1>
+      <ul>
+        <li th:each="tree : ${trees}">
+          <h3>Input Numbers:</h3>
+          <p th:text="'Input: ' + ${tree.split('Tree: ')[0]}"></p>
+          <h3>Tree Structure:</h3>
+          <pre th:text="${tree.split('Tree: ')[1]}"></pre>
+        </li>
+      </ul>
+      <a href="/enter-numbers">Go Back</a>
+    </div>
   </body>
 </html>
