@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Previous Trees</title>
+  </head>
+  <body>
+    <h1>Previously Processed Trees</h1>
+    <ul>
+      <!-- Loop through the list of trees -->
+      <li th:each="tree : ${trees}">
+        <pre th:text="${tree}"></pre>
+      </li>
+    </ul>
+    <a href="/enter-numbers">Go Back</a>
+  </body>
+</html>
